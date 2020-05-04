@@ -24,6 +24,16 @@ class HashTable:
         Implement this, and/or DJB2.
         """
 
+        fnv_prime = 1099511628211
+        fnv_offset_basis = 14695981039346656037
+
+        hash = 1
+
+        for letter in key.split(''):
+            hash += letter.encode() * fnv_prime
+
+        return hash
+
     def djb2(self, key):
         """
         DJB2 32-bit hash function
