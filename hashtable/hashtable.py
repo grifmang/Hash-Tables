@@ -89,8 +89,8 @@ class HashTable:
             self.storage[hi] = HashTableEntry(key, value)
             self.entries += 1
 
-            if self.load_factor() > 0.7:
-                self.resize(self.capacity * 2)
+            # if self.load_factor() > 0.7:
+            #     self.resize(self.capacity * 2)
         else:
             # Make new node
             new_node = HashTableEntry(key, value)
@@ -100,8 +100,8 @@ class HashTable:
             self.storage[hi] = new_node
             self.entries += 1
             
-            if self.load_factor() > 0.7:
-                self.resize(self.capacity * 2)
+            # if self.load_factor() > 0.7:
+            #     self.resize(self.capacity * 2)
             # while node.next is not None and node.key != key:
             #     node = node.next
             
@@ -136,8 +136,8 @@ class HashTable:
             else:
                 prev.next = prev.next.next
                 self.entries -= 1
-                if self.load_factor() < 0.2:
-                    self.resize(self.capacity // 2)
+                # if self.load_factor() < 0.2:
+                #     self.resize(self.capacity // 2)
                 return None
         
 
