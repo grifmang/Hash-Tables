@@ -5,6 +5,8 @@ import time
 def slowfun(x, y, cache = {}):
     # TODO: Modify to produce the same results, but much faster
 
+    # Possibly make faster rewriting pow and factorial functions caching both
+
     ti = time.ctime()
     if ('pow', x, y) not in cache:
         cache[('pow', x, y)]= math.pow(x, y)
