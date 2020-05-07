@@ -69,6 +69,9 @@ class HashTable:
         # return self.fnv1(key) % self.capacity
         return self.djb2(key) % self.capacity
 
+    def load_factor(self):
+        return self.entries / self.capacity
+
     def put(self, key, value):
         """
         Store the value with the given key.
@@ -86,8 +89,8 @@ class HashTable:
             self.storage[hi] = HashTableEntry(key, value)
             self.entries += 1
 
-            if self.entries / self.capacity < 0.7:
-                self.resize(self.capacity // 2)
+            if self.load_factor() > 0.7:
+                self.resize(self.capacity * 2)
         else:
             # Make new node
             new_node = HashTableEntry(key, value)
@@ -97,8 +100,8 @@ class HashTable:
             self.storage[hi] = new_node
             self.entries += 1
             
-            if self.entries / self.capacity < 0.7:
-                self.resize(self.capacity // 2)
+            if self.load_factor() > 0.7:
+                self.resize(self.capacity * 2)
             # while node.next is not None and node.key != key:
             #     node = node.next
             
@@ -133,8 +136,8 @@ class HashTable:
             else:
                 prev.next = prev.next.next
                 self.entries -= 1
-                if self.entries / self.capacity < 0.2:
-                    self.resize(self.capacity * 2)
+                if self.load_factor() < 0.2:
+                    self.resize(self.capacity // 2)
                 return None
         
 
@@ -157,13 +160,36 @@ class HashTable:
 
         return node.value
         
-    def resize(self):
+    def resize(self, size):
         """
         Doubles the capacity of the hash table and
         rehash all key/value pairs.
 
         Implement this.
         """
+        new_array = [None] * size
+        self.entries = 0
+
+        for element in self.storage:
+            while element:
+                new_index = self.hash_index(element.key)
+                if not new_array[new_index]:
+                    new_array[new_index] = HashTableEntry(element.key, element.value)
+                    self.entries += 1
+                else:
+                    new_node = HashTableEntry(element.key, element.value)
+                    new_node.next = new_array[new_index]
+                    new_array[new_index] = new_node
+                    self.entries += 1
+                element = element.next
+
+        # print('storage', self.storage)
+        # print('new_storage', new_array)
+        # print('entries', self.entries)
+        # print('length', len(new_array))
+        self.storage = new_array
+        return self.storage
+
 
 if __name__ == "__main__":
     ht = HashTable(2)
