@@ -17,6 +17,12 @@ class HashTable:
     Implement this.
     """
 
+    def __init__(self, capacity):
+        # self.hashable_string = hashable_string
+        self.capacity = capacity
+        self.storage = [None] * capacity
+        self.entries = 0
+
     def fnv1(self, key):
         """
         FNV-1 64-bit hash function
@@ -24,12 +30,38 @@ class HashTable:
         Implement this, and/or DJB2.
         """
 
+        fnv_prime = 1099511628211
+        fnv_offset_basis = 14695981039346656037
+
+        hash = fnv_offset_basis
+
+        str_bytes = str(key).encode()
+
+        for letter in str_bytes:
+            hash *= fnv_prime
+            hash ^= letter
+        
+        hash &= 0xffffffffffffffff
+
+        return hash
+
     def djb2(self, key):
         """
         DJB2 32-bit hash function
 
         Implement this, and/or FNV-1.
         """
+        hash = 5381
+
+        str_bytes = str(key).encode()
+        # print(str_bytes)
+
+        for letter in str_bytes:
+            hash *= 33 + letter
+
+        hash &= 0xffffffff
+
+        return hash
 
     def hash_index(self, key):
         """
@@ -48,6 +80,10 @@ class HashTable:
         Implement this.
         """
 
+        self.storage[self.hash_index(key)] = value
+
+        return self.storage
+
     def delete(self, key):
         """
         Remove the value stored with the given key.
@@ -56,6 +92,11 @@ class HashTable:
 
         Implement this.
         """
+        if self.storage[self.hash_index(key)] == None:
+            print('No key found')
+        else:
+            self.storage[self.hash_index(key)] = None
+        return self.storage
 
     def get(self, key):
         """
@@ -65,6 +106,7 @@ class HashTable:
 
         Implement this.
         """
+        return self.storage[self.hash_index(key)]
 
     def resize(self):
         """
